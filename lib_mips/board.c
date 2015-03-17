@@ -1798,31 +1798,7 @@ void board_init_r (gd_t *id, ulong dest_addr)
 #ifdef DUAL_IMAGE_SUPPORT
 	check_image_validation();
 #endif
-/*config bootdelay via environment parameter: bootdelay */
-	{
-	    char * s;
-	    s = getenv ("bootdelay");
-	    timer1 = s ? (int)simple_strtol(s, NULL, 10) : CONFIG_BOOTDELAY;
-	}
 
-	OperationSelect();   
-	while (timer1 > 0) {
-		--timer1;
-		/* delay 100 * 10ms */
-		for (i=0; i<100; ++i) {
-			if ((my_tmp = tstc()) != 0) {	/* we got a key press	*/
-				timer1 = 0;	/* no more delay	*/
-				BootType = getc();
-				if ((BootType < '0' || BootType > '5') && (BootType != '7') && (BootType != '8') && (BootType != '9'))
-					BootType = '3';
-				printf("\n\rYou choosed %c\n\n", BootType);
-				break;
-			}
-			udelay (10000);
-		}
-		printf ("\b\b\b%2d ", timer1);
-	}
-	putc ('\n');
 	if(BootType == '3') {
 		char *argv[2];
 		sprintf(addr_str, "0x%X", CFG_KERN_ADDR);
